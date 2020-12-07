@@ -2,7 +2,6 @@
 # Document setup ----------------------------------------------------------
 
 
-options(stringsAsFactors = FALSE)
 library(tidyverse)
 library(rio)
 library(janitor)
@@ -13,20 +12,13 @@ library(ggthemes)
 # data import -------------------------------------------------------------
 
 
-# list of all files in the data folder
-
-# log_directory <- dir("data", full.names = TRUE, recursive = TRUE)
-
-directory <- "data/QE_HFX/"
-list.files("data/QE_HFX/")
 
 import_log_files <- function(directory){
   
   
   filelist <- list.files(directory, full.names = TRUE)
   
-  # filelist <- list.files("data/QE_HFX", full.names = TRUE)
-  
+
   datalist <- lapply(filelist, FUN=function(x){read.table(x, sep = "\t", header = FALSE, fill = TRUE)})
   
   # Removing log files that don't have all the columns
