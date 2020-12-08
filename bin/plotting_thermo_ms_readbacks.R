@@ -2,10 +2,7 @@
 # Document setup ----------------------------------------------------------
 
 
-library(tidyverse)
-library(rio)
-library(janitor)
-library(lubridate)
+# library(rio)
 library(ggthemes)
 
 
@@ -15,29 +12,27 @@ library(ggthemes)
 
 import_log_files <- function(directory){
   
-  
+  # Required libraries
+  library(tidyverse)
+  library(janitor)
+  library(lubridate)
+
+  # Reading the log file names as a list
   filelist <- list.files(directory, full.names = TRUE)
   
-
+  # Importing the log files
   datalist <- lapply(filelist, FUN=function(x){read.table(x, sep = "\t", header = FALSE, fill = TRUE)})
   
   # Removing log files that don't have all the columns
   # should be 48 columns
   val <- ceiling(median(unlist(lapply(datalist, ncol))))
-  
-  # Indexing the dataset which does not have all the columns
   remove_index <- which(unlist(lapply(datalist, ncol)) != val)
-  
-  # removing the dataset
   datalist <- datalist[-remove_index]
-  
-  
-  # Joining datasets --------------------------------------------------------
   
   # binding all the datasets
   data = do.call("rbind", datalist) 
   
-  # removing text rows 
+  # removing the rows that used to be column names in each dataset
   index <- grep("[a-z]", data[,1])
   names(data) <- data[index[1],]
   data <- data[-index,]
@@ -57,25 +52,27 @@ import_log_files <- function(directory){
   return(data)
 }
 
-HFX_data <- import_log_files("data/QE_HFX/")
+data <- import_log_files("data/QE_HFX/")
 
 
 # Plots -------------------------------------------------------------------
 
-ggplot(data %>% filter(time >= as.Date("2020-03-12")),
+
+
+ggplot(data %>% filter(time <= as.Date("2019-12-01")),
        aes(x = time)) +
   geom_line(aes(y = ambient_temperature_raw_c, color = "Ambient Temp")) +
-  geom_line(aes(y = analyzer_temperature_sensor_c, color = "Analyzer Temp sensor")) +
-  geom_line(aes(y = ceps_peltier_temperature_sensor_c, color = "CEPS Peltier temp sensor")) +
+  # geom_line(aes(y = analyzer_temperature_sensor_c, color = "Analyzer Temp sensor")) +
+  # geom_line(aes(y = ceps_peltier_temperature_sensor_c, color = "CEPS Peltier temp sensor")) +
   scale_color_brewer(palette = "Set1") +
-  expand_limits(y = c(25,30)) +
+  # expand_limits(y = c(25,30)) +
   labs(title = "Ambient Temperature",
        y = expression('Temp ('~degree*C*')'),
        x = NULL,
        color = NULL) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   # guides(color = FALSE) +
-  theme_hc(base_size = 14) 
+  ggthemes::theme_hc(base_size = 14) 
 
 
 ggplot(data %>% filter(time >= as.Date("2020-03-01")), 
