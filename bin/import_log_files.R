@@ -1,8 +1,6 @@
 
 # Document setup ----------------------------------------------------------
 
-
-# library(rio)
 library(ggthemes)
 
 
@@ -13,15 +11,15 @@ library(ggthemes)
 import_log_files <- function(directory){
   
   # Required libraries
-  library(tidyverse)
-  library(janitor)
-  library(lubridate)
+  require(tidyverse)
+  require(janitor)
+  require(lubridate)
 
   # Reading the log file names as a list
   filelist <- list.files(directory, full.names = TRUE)
   
   # Importing the log files
-  datalist <- lapply(filelist, FUN=function(x){read.table(x, sep = "\t", header = FALSE, fill = TRUE)})
+  datalist <- lapply(filelist, FUN = function(x){read.table(x, sep = "\t", header = FALSE, fill = TRUE)})
   
   # Removing log files that don't have all the columns
   # should be 48 columns
@@ -32,7 +30,7 @@ import_log_files <- function(directory){
   # binding all the datasets
   data = do.call("rbind", datalist) 
   
-  # removing the rows that used to be column names in each dataset
+  # removing the rows that used to be column names in each separate dataset
   index <- grep("[a-z]", data[,1])
   names(data) <- data[index[1],]
   data <- data[-index,]
@@ -43,13 +41,14 @@ import_log_files <- function(directory){
     mutate(time = NA) %>% 
     select(date, time, everything(), -na)
   
-  # converting date using lubridate
+  # Converting to date format using lubridate
   data$time <- ymd_hms(data$date)
   
   # Converting data to numeric
   data[3:ncol(data)] <- mapply(data[3:ncol(data)], FUN = as.numeric)
 
   return(data)
+  
 }
 
 data <- import_log_files("data/QE_HFX/")
