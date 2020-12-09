@@ -33,6 +33,6 @@ instrument readbacks including:
 
 `C:\ProgramData\Thermo\Exploris\Log`
 
-# Importing log files
+# Example
 
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
