@@ -8,8 +8,9 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
-  
 )
+
+
 ```
 
 # Thermo_readbacks
@@ -50,19 +51,17 @@ library(scales)
 
 data <- import_log_files("data/QE_HF/")
 
+
 ```
 
 
-```{r}
+```{r echo=FALSE}
 
 
 ggplot(data %>% filter(time <= as.Date("2020-12-08")),
        aes(x = time)) +
   geom_line(aes(y = ambient_temperature_raw_c, color = "Ambient Temp")) +
-  # geom_line(aes(y = analyzer_temperature_sensor_c, color = "Analyzer Temp sensor")) +
-  # geom_line(aes(y = ceps_peltier_temperature_sensor_c, color = "CEPS Peltier temp sensor")) +
   scale_color_brewer(palette = "Set1") +
-  # expand_limits(y = c(25,30)) +
   labs(title = "Ambient Temperature",
        y = expression('Temp ('~degree*C*')'),
        x = NULL,
@@ -71,7 +70,6 @@ ggplot(data %>% filter(time <= as.Date("2020-12-08")),
   scale_y_continuous(limits = c(0,NA),
                      breaks = breaks_pretty()) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  # guides(color = FALSE) +
   ggthemes::theme_hc(base_size = 14) 
 
 ```
