@@ -7,29 +7,54 @@
 
 <!-- badges: end -->
 
-The goal of Thermo\_readbacks is to plot instrument readbacks from
-Thermo MS log files.
+A soon-to-be R package supporting Thermo mass spectrometry instrument
+readback analysis. Thermo orbitrap mass spectrometers record numerous
+instrument readbacks including:
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+  - Ambient temperature
+  - Analyzer temperature
+  - CEPS Peltier temperature
+  - Fore vacuum pressure
+  - high vacuum pressure
+  - ultra high vacuum pressure
+
+### Supported Instruments
+
+  - Q-Exactive family instruments
+  - Exploris family instruments
+
+### Path to log files
+
+#### Q Exactive
+
+`C:\Xcalibur\system\Exactive\log\`
+
+#### Exploris
+
+`C:\ProgramData\Thermo\Exploris\Log`
+
+# Importing log files
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+
+
+ggplot(data %>% filter(time <= as.Date("2020-12-08")),
+       aes(x = time)) +
+  geom_line(aes(y = ambient_temperature_raw_c, color = "Ambient Temp")) +
+  # geom_line(aes(y = analyzer_temperature_sensor_c, color = "Analyzer Temp sensor")) +
+  # geom_line(aes(y = ceps_peltier_temperature_sensor_c, color = "CEPS Peltier temp sensor")) +
+  scale_color_brewer(palette = "Set1") +
+  # expand_limits(y = c(25,30)) +
+  labs(title = "Ambient Temperature",
+       y = expression('Temp ('~degree*C*')'),
+       x = NULL,
+       color = NULL) +
+  scale_x_datetime(breaks = scales::breaks_pretty(10)) +
+  scale_y_continuous(limits = c(0,NA),
+                     breaks = breaks_pretty()) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  # guides(color = FALSE) +
+  ggthemes::theme_hc(base_size = 14) 
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date.
-
-You can also embed plots, for example:
-
-![](README_files/figure-gfm/pressure-1.png)<!-- -->
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub\!
+![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
