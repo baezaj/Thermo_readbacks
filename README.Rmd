@@ -5,6 +5,7 @@ output: github_document
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include = FALSE}
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -49,8 +50,9 @@ A soon-to-be R package supporting Thermo mass spectrometry instrument readback a
 source("bin/import_log_files.R")
 library(scales)
 
-data <- import_log_files("data/QE_HF/")
+data <- import_log_files("data/Exploris")
 
+# names(data)[grep("temp", names(data))]
 
 ```
 
@@ -58,16 +60,16 @@ data <- import_log_files("data/QE_HF/")
 ```{r echo=FALSE}
 
 
-ggplot(data %>% filter(time <= as.Date("2020-12-08")),
+ggplot(data %>% filter(time >= as.Date("2021-01-01")),
        aes(x = time)) +
-  geom_line(aes(y = ambient_temperature_raw_c, color = "Ambient Temp")) +
+  geom_line(aes(y = orbitrap_pt100_temperature_act_a_c, color = "Orbi Temp")) +
   scale_color_brewer(palette = "Set1") +
-  labs(title = "Ambient Temperature",
+  labs(title = "Exploris Orbi Temperature",
        y = expression('Temp ('~degree*C*')'),
        x = NULL,
        color = NULL) +
   scale_x_datetime(breaks = scales::breaks_pretty(10)) +
-  scale_y_continuous(limits = c(0,NA),
+  scale_y_continuous(limits = c(30,NA),
                      breaks = breaks_pretty()) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   ggthemes::theme_hc(base_size = 14) 
