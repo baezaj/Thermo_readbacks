@@ -1,9 +1,7 @@
 
 # Import Exploris Log Files -----------------------------------------------
 
-
 import_exploris_logfiles <- function(file, instrument = NULL){
-  
   
   # Libraries ---------------------------------------------------------------
   
